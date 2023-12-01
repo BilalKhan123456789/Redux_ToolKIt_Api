@@ -5,7 +5,8 @@ import { createSlice, nanoid,createAsyncThunk } from "@reduxjs/toolkit";
 const initialState = {
   todo: [],
   data:null,
-  isLoading:false
+  isLoading:false,
+  error:false
 
 
 };
@@ -13,7 +14,7 @@ const initialState = {
 // this function Fetch Api
 
 export const fetchTodoApi = createAsyncThunk("Fetch_Todo_Api",async()=>{
-  const res = await fetch("https://jsonplaceholder.typicode.com/todos");
+  const res = await fetch("https://dummyjson.com/products");
   return res.json()
 
 
@@ -32,6 +33,13 @@ export const TodoSlice = createSlice({
 
 builder.addCase(fetchTodoApi.pending,(state,action)=>{
 state.isLoading = true
+state.data = action.payload
+})
+
+builder.addCase(fetchTodoApi.rejected,(state,action)=>{
+state.error = true
+state.data = action.payload
+
 })
 
     builder.addCase(fetchTodoApi.fulfilled, (state,action)=>{
@@ -40,6 +48,8 @@ state.isLoading = true
     })
   },
 
+
+  
   // this is reducer
   reducers: { 
     // addTodo function
